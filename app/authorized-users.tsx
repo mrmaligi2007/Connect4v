@@ -47,7 +47,7 @@ export default function AuthorizedUsersPage() {
   // SMS Commands
   const sendSMS = (command) => {
     const smsUrl = Platform.select({
-      ios: `sms:${unitNumber}&body=${encodeURIComponent(command)}`,
+      ios: `sms:${unitNumber}`, // Removed prefilled body on iOS
       android: `sms:${unitNumber}?body=${encodeURIComponent(command)}`,
       default: `sms:${unitNumber}?body=${encodeURIComponent(command)}`,
     });

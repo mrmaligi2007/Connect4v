@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Linking, Platform, PermissionsAndroid } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MessageSquare } from 'lucide-react-native';
 import { Gate } from '../components/CustomIcons';
@@ -56,6 +56,12 @@ export default function HomePage() {
     }
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      loadData();
+    }, [])
+  );
+
   // SMS Commands
   const sendSMS = (command) => {
     if (!unitNumber) {
@@ -93,7 +99,7 @@ export default function HomePage() {
 
   return (
     <View style={styles.container}>
-      <Header title="GSM Relay Control" />
+      <Header title="Connect4v" />
       <DeviceInfo unitNumber={unitNumber} />
       
       <View style={styles.content}>
@@ -118,7 +124,7 @@ export default function HomePage() {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Current Settings</Text>
           <Text style={styles.settingText}>
-            Access Control: {relaySettings.accessControl === "AUT" ? "Authorized Numbers Only" : "All Numbers"}
+            Access Control: {relaySettings.accessControl === "AUT" ? "Authorized Numbers" : "All Numbers"}
           </Text>
           <Text style={styles.settingText}>
             Latch Time:{" "}
@@ -130,7 +136,7 @@ export default function HomePage() {
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Device Setup</Text>
-          <Text style={styles.cardSubtitle}>Configure your GSM relay module</Text>
+          <Text style={styles.cardSubtitle}>Configure your Connect4v</Text>
           <TouchableOpacity 
             style={styles.primaryButton} 
             onPress={() => router.push('/setup')}

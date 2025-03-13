@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from './components/Header';
 
+
 export default function SettingsPage() {
   const [unitNumber, setUnitNumber] = useState('');
   const [password, setPassword] = useState('1234');
@@ -11,15 +12,18 @@ export default function SettingsPage() {
     latchTime: '000',
   });
 
+
   useEffect(() => {
     loadData();
   }, []);
+
 
   const loadData = async () => {
     try {
       const savedUnitNumber = await AsyncStorage.getItem('unitNumber');
       const savedPassword = await AsyncStorage.getItem('password');
       const savedRelaySettings = await AsyncStorage.getItem('relaySettings');
+
 
       if (savedUnitNumber) setUnitNumber(savedUnitNumber);
       if (savedPassword) setPassword(savedPassword);
@@ -28,6 +32,7 @@ export default function SettingsPage() {
       console.error('Error loading data:', error);
     }
   };
+
 
   const saveToLocalStorage = async () => {
     try {
@@ -41,49 +46,19 @@ export default function SettingsPage() {
     }
   };
 
+
   return (
     <View style={styles.container}>
       <Header title="Settings" />
       <ScrollView style={styles.content}>
         <View style={styles.card}>
           <Text style={styles.cardTitle}>SMS Command Reference</Text>
-          <View style={styles.commandList}>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 1:</Text> {password}TEL00xxxxxxxxxx#
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 2:</Text> {password}P[new 4-digit password]
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 3.1:</Text> {password}A[serial]#[phone]#
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 3.2:</Text> {password}A[serial]#[phone]#[start]#[end]#
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 3.3:</Text> {password}A[serial]##
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 4.1:</Text> {password}ALL#
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 4.2:</Text> {password}AUT#
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 4.3:</Text> {password}GOT[time]#
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 5 ON:</Text> {password}CC
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 5 OFF:</Text> {password}DD
-            </Text>
-          </View>
+          { /* Removed unwanted command texts */ }
         </View>
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Device Settings</Text>
-          
+         
           <Text style={styles.inputLabel}>Unit Telephone Number</Text>
           <TextInput
             style={styles.input}
@@ -92,7 +67,7 @@ export default function SettingsPage() {
             placeholder="Enter GSM relay number"
             keyboardType="phone-pad"
           />
-          
+         
           <Text style={styles.inputLabel}>Current Password</Text>
           <TextInput
             style={styles.input}
@@ -108,7 +83,8 @@ export default function SettingsPage() {
           />
         </View>
 
-        <TouchableOpacity 
+
+        <TouchableOpacity
           style={styles.saveButton}
           onPress={saveToLocalStorage}
         >
@@ -118,6 +94,7 @@ export default function SettingsPage() {
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -175,3 +152,4 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 });
+

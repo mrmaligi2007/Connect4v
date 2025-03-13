@@ -35,11 +35,11 @@ export default function SetupPage() {
 
   return (
     <View style={styles.container}>
-      <Header title="GSM Relay Setup" />
+      <Header title="Setup" />
       <ScrollView style={styles.content}>
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Device Configuration</Text>
-          <Text style={styles.cardSubtitle}>Follow these steps to set up your GSM relay</Text>
+          <Text style={styles.cardSubtitle}>Follow these steps to set up your Connect4v</Text>
 
           <TouchableOpacity 
             style={styles.menuItem}

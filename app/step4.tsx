@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Linking, Platform } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Users, Lock } from 'lucide-react-native';
 import Header from './components/Header';
@@ -13,10 +13,6 @@ export default function Step4Page() {
     accessControl: 'AUT',
     latchTime: '000',
   });
-
-  useEffect(() => {
-    loadData();
-  }, []);
 
   const loadData = async () => {
     try {
@@ -31,6 +27,12 @@ export default function Step4Page() {
       console.error('Error loading data:', error);
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadData();
+    }, [])
+  );
 
   const saveToLocalStorage = async () => {
     try {
@@ -63,7 +65,7 @@ export default function Step4Page() {
   const setAccessControl = (type) => {
     const command = type === 'ALL' ? `${password}ALL#` : `${password}AUT#`;
     sendSMS(command);
-    setRelaySettings({ ...relaySettings, accessControl: type });
+    setRelaySettings(prev => ({ ...prev, accessControl: type }));
     saveToLocalStorage();
   };
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../components/Header';
+import { useFocusEffect } from 'expo-router';
 
 export default function SettingsPage() {
   const [unitNumber, setUnitNumber] = useState('');
@@ -33,6 +34,12 @@ export default function SettingsPage() {
     }
   };
 
+  useFocusEffect(
+    React.useCallback(() => {
+      loadData();
+    }, [])
+  );
+
   const saveToLocalStorage = async () => {
     try {
       await AsyncStorage.setItem('unitNumber', unitNumber);
@@ -50,44 +57,13 @@ export default function SettingsPage() {
       <Header title="Settings" />
       <ScrollView style={styles.content}>
         <View style={styles.card}>
-          <View style={styles.commandList}>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 1:</Text> {password}TEL00xxxxxxxxxx#
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 2:</Text> {password}P[new 4-digit password]
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 3.1:</Text> {password}A[serial]#[phone]#
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 3.2:</Text> {password}A[serial]#[phone]#[start]#[end]#
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 3.3:</Text> {password}A[serial]##
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 4.1:</Text> {password}ALL#
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 4.2:</Text> {password}AUT#
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 4.3:</Text> {password}GOT[time]#
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 5 ON:</Text> {password}CC
-            </Text>
-            <Text style={styles.commandItem}>
-              <Text style={styles.commandLabel}>Step 5 OFF:</Text> {password}DD
-            </Text>
-          </View>
+          { /* Removed unwanted SMS command texts */ }
         </View>
 
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Device Settings</Text>
           
-          <Text style={styles.inputLabel}>Unit Telephone Number</Text>
+          <Text style={styles.inputLabel}>Connect4v Phone number</Text>
           <TextInput
             style={styles.input}
             value={unitNumber}

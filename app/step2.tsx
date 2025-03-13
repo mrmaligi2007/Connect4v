@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Linking, Platform } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from './components/Header';
 
@@ -9,10 +9,6 @@ export default function Step2Page() {
   const [unitNumber, setUnitNumber] = useState('');
   const [password, setPassword] = useState('1234');
   const [newPassword, setNewPassword] = useState('');
-
-  useEffect(() => {
-    loadData();
-  }, []);
 
   const loadData = async () => {
     try {
@@ -25,6 +21,12 @@ export default function Step2Page() {
       console.error('Error loading data:', error);
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadData();
+    }, [])
+  );
 
   const saveToLocalStorage = async (newPwd) => {
     try {

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Linking, Platform } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from './components/Header';
 
@@ -9,10 +9,6 @@ export default function Step1Page() {
   const [unitNumber, setUnitNumber] = useState('');
   const [password, setPassword] = useState('1234');
   const [adminNumber, setAdminNumber] = useState('');
-
-  useEffect(() => {
-    loadData();
-  }, []);
 
   const loadData = async () => {
     try {
@@ -27,6 +23,12 @@ export default function Step1Page() {
       console.error('Error loading data:', error);
     }
   };
+
+  useFocusEffect(
+    React.useCallback(() => {
+      loadData();
+    }, [])
+  );
 
   const saveToLocalStorage = async () => {
     try {
@@ -61,13 +63,13 @@ export default function Step1Page() {
       alert('Please enter an admin phone number');
       return;
     }
-    sendSMS(`${password}TEL00${adminNumber}#`);
+    sendSMS(`${password}TEL0061${adminNumber}#`);
     saveToLocalStorage();
   };
 
   return (
     <View style={styles.container}>
-      <Header title="Step 1: Register Admin" showBack backTo="/setup" />
+      <Header title="Register Admin" showBack backTo="/setup" />
       <ScrollView style={styles.content}>
         <View style={styles.card}>
           <Text style={styles.cardTitle}>Register Admin Number</Text>
@@ -80,10 +82,10 @@ export default function Step1Page() {
             style={styles.input}
             value={adminNumber}
             onChangeText={setAdminNumber}
-            placeholder="Example: 0469843459"
+            placeholder="Example: 04xxxx3459"
             keyboardType="phone-pad"
           />
-          <Text style={styles.inputHint}>Format: Your country code + phone number</Text>
+          <Text style={styles.inputHint}>Format: Your country code + phone number(remove 0)</Text>
 
           <TouchableOpacity 
             style={styles.primaryButton}
