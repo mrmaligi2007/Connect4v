@@ -9,7 +9,7 @@ interface HeaderProps {
   backTo?: string;
 }
 
-export default function Header({ title, showBack = false, backTo = '/setup' }: HeaderProps) {
+export default function Header({ title, showBack = false, backTo = '/(tabs)/setup' }: HeaderProps) {
   const router = useRouter();
   
   return (

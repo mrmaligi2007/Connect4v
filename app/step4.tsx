@@ -101,7 +101,7 @@ export default function Step4Page() {
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton}
-          onPress={() => router.push('/setup')}
+          onPress={() => router.push('/(tabs)/setup')}
         >
           <ChevronLeft color="white" size={24} />
         </TouchableOpacity>

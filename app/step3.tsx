@@ -138,7 +138,7 @@ export default function AuthorizedUsersPage() {
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton}
-          onPress={() => router.push('/setup')}
+          onPress={() => router.push('/(tabs)/setup')}
         >
           <Text style={styles.backButtonText}>Back</Text>
         </TouchableOpacity>
