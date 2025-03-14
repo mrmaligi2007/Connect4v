@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ArrowLeft } from 'lucide-react-native';
+import { ChevronRight, User, Key, Users, Settings } from 'lucide-react-native';
 import Header from '../components/Header';
 import DeviceInfo from '../components/DeviceInfo';
 
@@ -35,71 +35,66 @@ export default function SetupPage() {
 
   return (
     <View style={styles.container}>
-      <Header title="Setup" />
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Setup</Text>
+      </View>
+      
+      {unitNumber && (
+        <View style={styles.deviceInfo}>
+          <Text style={styles.deviceInfoText}>{unitNumber}</Text>
+        </View>
+      )}
+      
       <ScrollView style={styles.content}>
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Device Configuration</Text>
-          <Text style={styles.cardSubtitle}>Follow these steps to set up your Connect4v</Text>
-
+        <View style={styles.menuList}>
           <TouchableOpacity 
             style={styles.menuItem}
             onPress={() => router.push('/step1')}
           >
-            <View style={styles.menuItemContent}>
-              <View style={styles.numberCircle}>
-                <Text style={styles.numberText}>1</Text>
-              </View>
-              <Text style={styles.menuItemText}>Register Admin Number</Text>
+            <View style={styles.menuItemIcon}>
+              <User size={20} color="#3a86ff" />
+              <Text style={styles.menuItemNumber}>1</Text>
             </View>
-            <ArrowLeft style={styles.arrowIcon} size={24} color="#666" />
+            <Text style={styles.menuItemText}>Register Admin</Text>
+            <ChevronRight size={20} color="#ccc" />
           </TouchableOpacity>
 
           <TouchableOpacity 
             style={styles.menuItem}
             onPress={() => router.push('/step2')}
           >
-            <View style={styles.menuItemContent}>
-              <View style={styles.numberCircle}>
-                <Text style={styles.numberText}>2</Text>
-              </View>
-              <Text style={styles.menuItemText}>Change Admin Password</Text>
+            <View style={styles.menuItemIcon}>
+              <Key size={20} color="#3a86ff" />
+              <Text style={styles.menuItemNumber}>2</Text>
             </View>
-            <ArrowLeft style={styles.arrowIcon} size={24} color="#666" />
+            <Text style={styles.menuItemText}>Change Password</Text>
+            <ChevronRight size={20} color="#ccc" />
           </TouchableOpacity>
 
           <TouchableOpacity 
             style={styles.menuItem}
             onPress={() => router.push('/step3')}
           >
-            <View style={styles.menuItemContent}>
-              <View style={styles.numberCircle}>
-                <Text style={styles.numberText}>3</Text>
-              </View>
-              <Text style={styles.menuItemText}>Authorized User Management</Text>
+            <View style={styles.menuItemIcon}>
+              <Users size={20} color="#3a86ff" />
+              <Text style={styles.menuItemNumber}>3</Text>
             </View>
-            <ArrowLeft style={styles.arrowIcon} size={24} color="#666" />
+            <Text style={styles.menuItemText}>Authorized Users</Text>
+            <ChevronRight size={20} color="#ccc" />
           </TouchableOpacity>
 
           <TouchableOpacity 
             style={styles.menuItem}
             onPress={() => router.push('/step4')}
           >
-            <View style={styles.menuItemContent}>
-              <View style={styles.numberCircle}>
-                <Text style={styles.numberText}>4</Text>
-              </View>
-              <Text style={styles.menuItemText}>Relay Control Settings</Text>
+            <View style={styles.menuItemIcon}>
+              <Settings size={20} color="#3a86ff" />
+              <Text style={styles.menuItemNumber}>4</Text>
             </View>
-            <ArrowLeft style={styles.arrowIcon} size={24} color="#666" />
+            <Text style={styles.menuItemText}>Relay Settings</Text>
+            <ChevronRight size={20} color="#ccc" />
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity 
-          style={styles.saveButton}
-          onPress={saveToLocalStorage}
-        >
-          <Text style={styles.saveButtonText}>Save All Settings</Text>
-        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -108,72 +103,74 @@ export default function SetupPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#f7f7f7',
   },
-  content: {
-    padding: 16,
-    paddingBottom: 80,
+  header: {
+    backgroundColor: '#3a86ff',
+    paddingTop: 50,
+    paddingBottom: 16,
+    alignItems: 'center',
   },
-  card: {
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-  },
-  cardTitle: {
+  headerTitle: {
     fontSize: 20,
     fontWeight: '600',
-    marginBottom: 8,
-  },
-  cardSubtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 16,
-  },
-  menuItem: {
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 8,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  menuItemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  numberCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#00bfff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  numberText: {
     color: 'white',
-    fontWeight: '600',
   },
-  menuItemText: {
-    fontSize: 18,
-  },
-  arrowIcon: {
-    transform: [{ rotate: '180deg' }],
-  },
-  saveButton: {
-    backgroundColor: '#4CAF50',
-    borderRadius: 8,
+  deviceInfo: {
+    backgroundColor: '#ddd',
     padding: 12,
     alignItems: 'center',
-    marginBottom: 20,
   },
-  saveButtonText: {
+  deviceInfoText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  content: {
+    flex: 1,
+    padding: 16,
+  },
+  menuList: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    overflow: 'hidden',
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  menuItemIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#f0f0f0',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 16,
+  },
+  menuItemNumber: {
+    position: 'absolute',
+    top: -2,
+    right: -2,
+    backgroundColor: '#3a86ff',
+    width: 16,
+    height: 16,
+    borderRadius: 8,
     color: 'white',
-    fontSize: 18,
-    fontWeight: '500',
+    textAlign: 'center',
+    fontSize: 10,
+    lineHeight: 16,
   },
+  menuItemText: {
+    flex: 1,
+    fontSize: 16,
+  }
 });

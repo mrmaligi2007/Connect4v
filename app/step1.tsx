@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Linking, Platform } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Header from './components/Header';
+import { ChevronLeft, Send } from 'lucide-react-native';
 
 export default function Step1Page() {
   const router = useRouter();
@@ -69,29 +69,41 @@ export default function Step1Page() {
 
   return (
     <View style={styles.container}>
-      <Header title="Register Admin" showBack backTo="/setup" />
+      <View style={styles.header}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => router.push('/setup')}
+        >
+          <ChevronLeft color="white" size={24} />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Register Admin</Text>
+        <View style={styles.placeholder}></View>
+      </View>
+      
       <ScrollView style={styles.content}>
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Register Admin Number</Text>
-          <Text style={styles.cardSubtitle}>
-            We have to register the Admin number to the relay. This number will have full control over the device.
+          <Text style={styles.cardDescription}>
+            Register the Admin number to grant full control over the device.
           </Text>
-
-          <Text style={styles.inputLabel}>Admin Phone Number</Text>
-          <TextInput
-            style={styles.input}
-            value={adminNumber}
-            onChangeText={setAdminNumber}
-            placeholder="Example: 04xxxx3459"
-            keyboardType="phone-pad"
-          />
-          <Text style={styles.inputHint}>Format: Your country code + phone number(remove 0)</Text>
+          
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Admin Phone Number</Text>
+            <TextInput
+              style={styles.input}
+              value={adminNumber}
+              onChangeText={setAdminNumber}
+              placeholder="Example: 04xxxx3459"
+              keyboardType="phone-pad"
+            />
+            <Text style={styles.inputHint}>Format: Your country code + phone number (remove 0)</Text>
+          </View>
 
           <TouchableOpacity 
             style={styles.primaryButton}
             onPress={registerAdmin}
           >
-            <Text style={styles.primaryButtonText}>Send Registration SMS</Text>
+            <Send size={18} color="white" />
+            <Text style={styles.buttonText}>Register Admin</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -102,55 +114,86 @@ export default function Step1Page() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#f7f7f7',
   },
-  content: {
-    padding: 16,
-    paddingBottom: 80,
+  header: {
+    backgroundColor: '#3a86ff',
+    paddingTop: 50,
+    paddingBottom: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
   },
-  card: {
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-  },
-  cardTitle: {
+  headerTitle: {
     fontSize: 20,
     fontWeight: '600',
-    marginBottom: 8,
+    color: 'white',
   },
-  cardSubtitle: {
+  backButton: {
+    padding: 8,
+  },
+  placeholder: {
+    width: 40,
+  },
+  content: {
+    flex: 1,
+    padding: 20,
+  },
+  card: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1,
+  },
+  cardDescription: {
     fontSize: 16,
-    color: '#666',
-    marginBottom: 16,
+    marginBottom: 20,
+    color: '#555',
+  },
+  inputContainer: {
+    marginBottom: 24,
   },
   inputLabel: {
-    fontSize: 18,
+    fontSize: 14,
     marginBottom: 8,
+    color: '#555',
+    fontWeight: '500',
   },
   input: {
     borderWidth: 1,
     borderColor: '#e0e0e0',
-    borderRadius: 8,
+    borderRadius: 6,
     padding: 12,
     fontSize: 16,
+    backgroundColor: '#f9f9f9',
     marginBottom: 8,
   },
   inputHint: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 16,
+    fontSize: 12,
+    color: '#888',
   },
   primaryButton: {
-    backgroundColor: '#00bfff',
+    backgroundColor: '#4CAF50',
     borderRadius: 8,
-    padding: 12,
+    padding: 14,
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
   },
-  primaryButtonText: {
+  buttonText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '500',
+    marginLeft: 8,
   },
 });

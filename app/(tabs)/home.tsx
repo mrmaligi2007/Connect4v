@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Linking, Platform, PermissionsAndroid } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { MessageSquare } from 'lucide-react-native';
-import { Gate } from '../components/CustomIcons';
+import { MessageSquare, Power, Settings as SettingsIcon } from 'lucide-react-native';
 import Header from '../components/Header';
 import DeviceInfo from '../components/DeviceInfo';
 
@@ -99,51 +98,58 @@ export default function HomePage() {
 
   return (
     <View style={styles.container}>
-      <Header title="Connect4v" />
-      <DeviceInfo unitNumber={unitNumber} />
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Connect4v</Text>
+      </View>
+      
+      {unitNumber && (
+        <View style={styles.deviceInfo}>
+          <Text style={styles.deviceInfoText}>{unitNumber}</Text>
+        </View>
+      )}
       
       <View style={styles.content}>
-        <View style={styles.card}>
-          <TouchableOpacity style={styles.button} onPress={turnRelayOn}>
-            <View style={styles.buttonContent}>
-              <Gate size={48} color="#00bfff" />
-              <Text style={styles.buttonText}>Open Gate (ON)</Text>
-            </View>
-            <MessageSquare size={24} color="#00bfff" />
+        <View style={styles.controlsContainer}>
+          <TouchableOpacity 
+            style={[styles.controlButton, styles.onButton]} 
+            onPress={turnRelayOn}
+            activeOpacity={0.8}
+          >
+            <Power size={32} color="white" />
+            <Text style={styles.controlButtonText}>ON</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={turnRelayOff}>
-            <View style={styles.buttonContent}>
-              <Gate size={48} color="#00bfff" />
-              <Text style={styles.buttonText}>Close Gate (OFF)</Text>
-            </View>
-            <MessageSquare size={24} color="#00bfff" />
+          <TouchableOpacity 
+            style={[styles.controlButton, styles.offButton]} 
+            onPress={turnRelayOff}
+            activeOpacity={0.8}
+          >
+            <Power size={32} color="white" />
+            <Text style={styles.controlButtonText}>OFF</Text>
           </TouchableOpacity>
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Current Settings</Text>
-          <Text style={styles.settingText}>
-            Access Control: {relaySettings.accessControl === "AUT" ? "Authorized Numbers" : "All Numbers"}
+        <View style={styles.infoContainer}>
+          <Text style={styles.infoLabel}>Access Control</Text>
+          <Text style={styles.infoValue}>
+            {relaySettings.accessControl === "AUT" ? "Authorized Only" : "All Numbers"}
           </Text>
-          <Text style={styles.settingText}>
-            Latch Time:{" "}
+          
+          <Text style={styles.infoLabel}>Latch Time</Text>
+          <Text style={styles.infoValue}>
             {relaySettings.latchTime === "000"
               ? "Momentary (0.5s)"
               : `${parseInt(relaySettings.latchTime)} seconds`}
           </Text>
         </View>
 
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Device Setup</Text>
-          <Text style={styles.cardSubtitle}>Configure your Connect4v</Text>
-          <TouchableOpacity 
-            style={styles.primaryButton} 
-            onPress={() => router.push('/setup')}
-          >
-            <Text style={styles.primaryButtonText}>Go to Setup</Text>
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity 
+          style={styles.setupButton} 
+          onPress={() => router.push('/setup')}
+        >
+          <SettingsIcon size={20} color="#555" />
+          <Text style={styles.setupButtonText}>Setup Device</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -152,66 +158,98 @@ export default function HomePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#f7f7f7',
   },
-  content: {
-    padding: 16,
-    paddingBottom: 80,
+  header: {
+    backgroundColor: '#3a86ff',
+    paddingTop: 50,
+    paddingBottom: 16,
+    alignItems: 'center',
   },
-  card: {
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-  },
-  cardTitle: {
+  headerTitle: {
     fontSize: 20,
     fontWeight: '600',
-    marginBottom: 8,
+    color: 'white',
   },
-  cardSubtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 16,
-  },
-  button: {
-    borderWidth: 1,
-    borderColor: '#FFCC00',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontSize: 18,
-    marginLeft: 16,
-  },
-  commandText: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 16,
-  },
-  settingText: {
-    fontSize: 18,
-    marginBottom: 8,
-  },
-  primaryButton: {
-    backgroundColor: '#FFCC00',
-    borderRadius: 8,
+  deviceInfo: {
+    backgroundColor: '#ddd',
     padding: 12,
     alignItems: 'center',
+  },
+  deviceInfoText: {
+    fontSize: 14,
+    color: '#333',
+  },
+  content: {
+    flex: 1,
+    padding: 20,
+  },
+  controlsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 30,
+  },
+  controlButton: {
+    width: '48%',
+    height: 120,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
+  },
+  onButton: {
+    backgroundColor: '#4CAF50',
+  },
+  offButton: {
+    backgroundColor: '#f44336',
+  },
+  controlButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
     marginTop: 8,
   },
-  primaryButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: '500',
+  infoContainer: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1,
+  },
+  infoLabel: {
+    fontSize: 14,
+    color: '#777',
+    marginBottom: 4,
+  },
+  infoValue: {
+    fontSize: 16,
+    marginBottom: 16,
+    color: '#333',
+  },
+  setupButton: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1,
+  },
+  setupButtonText: {
+    marginLeft: 8,
+    fontSize: 16,
+    color: '#555',
   },
 });

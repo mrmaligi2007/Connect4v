@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView, Linking, Platform, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Clipboard from 'expo-clipboard';
-import Header from './components/Header';
 import { useRouter, useFocusEffect } from 'expo-router';
+import { UserPlus, UserMinus, List } from 'lucide-react-native';
 
 export default function AuthorizedUsersPage() {
   const router = useRouter();
@@ -135,88 +135,99 @@ export default function AuthorizedUsersPage() {
 
   return (
     <View style={styles.container}>
-      <Header title="Authorized Users" showBack backTo="/setup" />
+      <View style={styles.header}>
+        <TouchableOpacity 
+          style={styles.backButton}
+          onPress={() => router.push('/setup')}
+        >
+          <Text style={styles.backButtonText}>Back</Text>
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Authorized Users</Text>
+        <View style={styles.placeholder}></View>
+      </View>
+      
       <ScrollView style={styles.content}>
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Add Authorized User</Text>
-          <Text style={styles.cardSubtitle}>
-            Add a phone number that will be authorized to control the relay unit.
-          </Text>
-
-          <Text style={styles.inputLabel}>User ID (1-200)</Text>
-          <TextInput
-            style={styles.input}
-            value={serialNumber}
-            onChangeText={(text) => {
-              const filtered = text.replace(/[^0-9]/g, '').slice(0, 3);
-              setSerialNumber(filtered);
-            }}
-            placeholder="Enter user ID"
-            keyboardType="number-pad"
-            maxLength={3}
-          />
-          <Text style={styles.inputHint}>Enter the user id (numeric, 1-200)</Text>
-
-          <Text style={styles.inputLabel}>Phone Number</Text>
-          <TextInput
-            style={styles.input}
-            value={phoneNumber}
-            onChangeText={setPhoneNumber}
-            placeholder="Example: 0469843459"
-            keyboardType="phone-pad"
-          />
-          <Text style={styles.inputHint}>Enter without country code or special characters</Text>
+        <View style={styles.formContainer}>
+          <Text style={styles.formTitle}>Add User</Text>
           
-          <Text style={styles.inputLabel}>Start Time (optional)</Text>
-          <TextInput
-            style={styles.input}
-            value={startTime}
-            onChangeText={setStartTime}
-            placeholder="e.g., 2408050800"
-            keyboardType="number-pad"
-            maxLength={10}
-          />
-          <Text style={styles.inputHint}>Format: YYMMDDHHMM (ex: 2408050800)</Text>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>User ID (1-200)</Text>
+            <TextInput
+              style={styles.input}
+              value={serialNumber}
+              onChangeText={(text) => {
+                const filtered = text.replace(/[^0-9]/g, '').slice(0, 3);
+                setSerialNumber(filtered);
+              }}
+              placeholder="Enter user ID"
+              keyboardType="number-pad"
+              maxLength={3}
+            />
+          </View>
 
-          <Text style={styles.inputLabel}>End Time (optional)</Text>
-          <TextInput
-            style={styles.input}
-            value={endTime}
-            onChangeText={setEndTime}
-            placeholder="e.g., 2409051000"
-            keyboardType="number-pad"
-            maxLength={10}
-          />
-          <Text style={styles.inputHint}>Format: YYMMDDHHMM (ex: 2409051000)</Text>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Phone Number</Text>
+            <TextInput
+              style={styles.input}
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+              placeholder="Enter phone number"
+              keyboardType="phone-pad"
+            />
+          </View>
+          
+          <View style={styles.timeInputsRow}>
+            <View style={styles.halfInputContainer}>
+              <Text style={styles.inputLabel}>Start Time (Optional)</Text>
+              <TextInput
+                style={styles.input}
+                value={startTime}
+                onChangeText={setStartTime}
+                placeholder="YYMMDDHHMM"
+                keyboardType="number-pad"
+                maxLength={10}
+              />
+            </View>
+            
+            <View style={styles.halfInputContainer}>
+              <Text style={styles.inputLabel}>End Time (Optional)</Text>
+              <TextInput
+                style={styles.input}
+                value={endTime}
+                onChangeText={setEndTime}
+                placeholder="YYMMDDHHMM"
+                keyboardType="number-pad"
+                maxLength={10}
+              />
+            </View>
+          </View>
 
+          <View style={styles.actionsContainer}>
+            <TouchableOpacity 
+              style={styles.addButton}
+              onPress={addAuthorizedUser}
+            >
+              <UserPlus size={18} color="white" />
+              <Text style={styles.buttonText}>Add User</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={styles.deleteButton}
+              onPress={deleteAuthorizedUser}
+            >
+              <UserMinus size={18} color="white" />
+              <Text style={styles.buttonText}>Delete User</Text>
+            </TouchableOpacity>
+          </View>
+          
           <TouchableOpacity 
-            style={styles.primaryButton}
-            onPress={addAuthorizedUser}
+            style={styles.listButton}
+            onPress={() => router.push("/authorized-users-list")}
           >
-            <Text style={styles.primaryButtonText}>Add User</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={[styles.secondaryButton, styles.marginTop]}
-            onPress={deleteAuthorizedUser}
-          >
-            <Text style={styles.secondaryButtonText}>Delete User at Position {serialNumber}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity 
-            style={[styles.dangerButton, styles.marginTop]}
-            onPress={deleteAllUsers}
-          >
-            <Text style={styles.dangerButtonText}>Delete All Users</Text>
+            <List size={18} color="#555" />
+            <Text style={styles.listButtonText}>View Users List</Text>
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity 
-          style={styles.primaryButton}
-          onPress={() => router.push("/authorized-users-list")}
-        >
-          <Text style={styles.primaryButtonText}>View Authorized Users List</Text>
-        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -225,95 +236,118 @@ export default function AuthorizedUsersPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f7f7f7',
   },
-  content: {
-    padding: 16,
-    paddingBottom: 80,
+  header: {
+    backgroundColor: '#3a86ff',
+    paddingTop: 50,
+    paddingBottom: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
   },
-  card: {
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-    backgroundColor: 'white',
-  },
-  cardTitle: {
+  headerTitle: {
     fontSize: 20,
     fontWeight: '600',
-    marginBottom: 8,
+    color: 'white',
   },
-  cardSubtitle: {
+  backButton: {
+    padding: 8,
+  },
+  backButtonText: {
+    color: 'white',
     fontSize: 16,
-    color: '#666',
+  },
+  placeholder: {
+    width: 50,
+  },
+  content: {
+    flex: 1,
+    padding: 20,
+  },
+  formContainer: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1,
+  },
+  formTitle: {
+    fontSize: 18,
+    fontWeight: '500',
+    marginBottom: 16,
+    color: '#333',
+  },
+  inputContainer: {
     marginBottom: 16,
   },
   inputLabel: {
-    fontSize: 16,
+    fontSize: 14,
     marginBottom: 8,
-    fontWeight: '500',
+    color: '#555',
   },
   input: {
     borderWidth: 1,
     borderColor: '#e0e0e0',
-    borderRadius: 8,
+    borderRadius: 6,
     padding: 12,
     fontSize: 16,
-    marginBottom: 8,
+    backgroundColor: '#f9f9f9',
   },
-  inputHint: {
-    fontSize: 14,
-    color: '#666',
+  timeInputsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  halfInputContainer: {
+    width: '48%',
     marginBottom: 16,
   },
-  marginTop: {
-    marginTop: 12,
+  actionsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
   },
-  primaryButton: {
-    backgroundColor: '#00bfff',
+  addButton: {
+    backgroundColor: '#4CAF50',
     borderRadius: 8,
     padding: 12,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    marginRight: 8,
   },
-  primaryButtonText: {
+  deleteButton: {
+    backgroundColor: '#f44336',
+    borderRadius: 8,
+    padding: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    marginLeft: 8,
+  },
+  buttonText: {
     color: 'white',
-    fontSize: 18,
-    fontWeight: '500',
+    fontSize: 16,
+    marginLeft: 8,
   },
-  secondaryButton: {
-    backgroundColor: 'white',
+  listButton: {
     borderWidth: 1,
-    borderColor: '#00bfff',
+    borderColor: '#ddd',
     borderRadius: 8,
     padding: 12,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  secondaryButtonText: {
-    color: '#00bfff',
+  listButtonText: {
+    color: '#555',
     fontSize: 16,
-    fontWeight: '500',
-  },
-  dangerButton: {
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: '#ff3b30',
-    borderRadius: 8,
-    padding: 12,
-    alignItems: 'center',
-  },
-  dangerButtonText: {
-    color: '#ff3b30',
-    fontSize: 16,
-    fontWeight: '500',
-  },
-  commandExample: {
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  codeText: {
-    fontFamily: 'monospace',
-    backgroundColor: '#f5f5f5',
-    paddingHorizontal: 4,
-  },
+    marginLeft: 8,
+  }
 });

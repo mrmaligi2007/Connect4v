@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ArrowLeft } from 'lucide-react-native';
+import { ChevronLeft } from 'lucide-react-native';
 
 interface HeaderProps {
   title: string;
@@ -18,8 +18,9 @@ export default function Header({ title, showBack = false, backTo = '/setup' }: H
         <TouchableOpacity 
           style={styles.backButton}
           onPress={() => router.push(backTo)}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <ArrowLeft color="white" size={24} />
+          <ChevronLeft color="white" size={24} />
         </TouchableOpacity>
       )}
       <Text style={styles.title}>{title}</Text>
@@ -34,15 +35,15 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     paddingTop: 50,
-    backgroundColor: '#003399',
+    backgroundColor: '#3a86ff',
   },
   backButton: {
     marginRight: 16,
   },
   title: {
     color: 'white',
-    fontSize: 22,
-    fontWeight: '400',
+    fontSize: 18,
+    fontWeight: '500',
     flex: 1,
     textAlign: 'center',
   },

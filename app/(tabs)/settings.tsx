@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Header from '../components/Header';
 import { useFocusEffect } from 'expo-router';
+import { Save } from 'lucide-react-native';
 
 export default function SettingsPage() {
   const [unitNumber, setUnitNumber] = useState('');
@@ -54,43 +54,47 @@ export default function SettingsPage() {
 
   return (
     <View style={styles.container}>
-      <Header title="Settings" />
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Settings</Text>
+      </View>
+      
       <ScrollView style={styles.content}>
-        <View style={styles.card}>
-          { /* Removed unwanted SMS command texts */ }
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Device Settings</Text>
+        <View style={styles.settingsGroup}>
+          <Text style={styles.settingsGroupTitle}>Device Settings</Text>
           
-          <Text style={styles.inputLabel}>Connect4v Phone number</Text>
-          <TextInput
-            style={styles.input}
-            value={unitNumber}
-            onChangeText={setUnitNumber}
-            placeholder="Enter GSM relay number"
-            keyboardType="phone-pad"
-          />
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Device Phone Number</Text>
+            <TextInput
+              style={styles.input}
+              value={unitNumber}
+              onChangeText={setUnitNumber}
+              placeholder="Enter GSM relay number"
+              keyboardType="phone-pad"
+            />
+          </View>
           
-          <Text style={styles.inputLabel}>Current Password</Text>
-          <TextInput
-            style={styles.input}
-            value={password}
-            onChangeText={(text) => {
-              // Only allow 4 digits
-              const filtered = text.replace(/[^0-9]/g, '').slice(0, 4);
-              setPassword(filtered);
-            }}
-            placeholder="4-digit password"
-            keyboardType="number-pad"
-            maxLength={4}
-          />
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Device Password</Text>
+            <TextInput
+              style={styles.input}
+              value={password}
+              onChangeText={(text) => {
+                const filtered = text.replace(/[^0-9]/g, '').slice(0, 4);
+                setPassword(filtered);
+              }}
+              placeholder="4-digit password"
+              keyboardType="number-pad"
+              maxLength={4}
+              secureTextEntry
+            />
+          </View>
         </View>
 
         <TouchableOpacity 
           style={styles.saveButton}
           onPress={saveToLocalStorage}
         >
+          <Save size={18} color="white" />
           <Text style={styles.saveButtonText}>Save Settings</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -101,56 +105,73 @@ export default function SettingsPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#f7f7f7',
   },
-  content: {
-    padding: 16,
-    paddingBottom: 80,
+  header: {
+    backgroundColor: '#3a86ff',
+    paddingTop: 50,
+    paddingBottom: 16,
+    alignItems: 'center',
   },
-  card: {
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-    borderRadius: 8,
-    padding: 16,
-    marginBottom: 16,
-  },
-  cardTitle: {
+  headerTitle: {
     fontSize: 20,
     fontWeight: '600',
+    color: 'white',
+  },
+  content: {
+    flex: 1,
+    padding: 20,
+  },
+  settingsGroup: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1,
+  },
+  settingsGroupTitle: {
+    fontSize: 18,
+    fontWeight: '500',
+    marginBottom: 16,
+    color: '#333',
+  },
+  inputContainer: {
     marginBottom: 16,
   },
-  commandList: {
-    marginBottom: 8,
-  },
-  commandItem: {
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  commandLabel: {
-    fontWeight: '600',
-  },
   inputLabel: {
-    fontSize: 18,
+    fontSize: 14,
     marginBottom: 8,
+    color: '#555',
   },
   input: {
     borderWidth: 1,
     borderColor: '#e0e0e0',
-    borderRadius: 8,
+    borderRadius: 6,
     padding: 12,
     fontSize: 16,
-    marginBottom: 16,
+    backgroundColor: '#f9f9f9',
   },
   saveButton: {
-    backgroundColor: '#00bfff',
+    backgroundColor: '#4CAF50',
     borderRadius: 8,
-    padding: 12,
+    padding: 14,
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
   },
   saveButtonText: {
     color: 'white',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '500',
-  },
+    marginLeft: 8,
+  }
 });
